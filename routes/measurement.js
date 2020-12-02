@@ -9,6 +9,21 @@ const Workout = require('../models/workout');
 const Session = require('../models/session');
 const Measurement = require('../models/measurement');
 
+router.get('/week', (req, res, next) => {
+    const { user } = req.query;
+
+    Measurement.aggregate([
+        { $match: {
+            $and: [
+                { dateAdded: {$gte: new Date(new Date() - 7 * 60 * 60 * 24 * 1000)}},
+                {user : mongoose.Types.ObjectId(user)}
+            ]
+        }
+    }      
+    ]).then(measurements => res.status(201).send(measurements))
+    .catch(err => res.status(400).send(err));
+});
+
 router.get('/all', (req, res, next) => {
     const { user } = req.query;
     console.info('Get all Measurements', user);

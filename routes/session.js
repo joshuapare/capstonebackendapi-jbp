@@ -101,6 +101,17 @@ router.post('/update', (req, res, next) => {
 
 });
 
+router.post('/remove', (req, res, next) => {
+
+    ActiveSession.findByIdAndRemove(req.body.sessionId)
+    .then(session => res.send(session))
+    .catch(err => {
+        console.log(err)
+        res.status(401).send(err)
+    });
+
+});
+
 router.post('/', (req, res, next) => {
     console.info("Request Body", req.body);
     const { name, user, _id, exercises } = req.body.workout;
@@ -144,11 +155,6 @@ router.post('/', (req, res, next) => {
             console.log(err);
             res.status(400).send(err);
         });
-
-});
-
-router.delete('/:id', (req, res, next) => {
-    res.send("session delete route");
 
 });
 
